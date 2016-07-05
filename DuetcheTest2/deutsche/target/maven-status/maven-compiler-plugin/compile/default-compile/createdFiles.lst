@@ -1,0 +1,9 @@
+com\duetche\service\Location.class
+com\duetche\controller\ShopController.class
+com\duetche\service\AddressConverter.class
+com\duetche\service\ShopService.class
+com\duetche\service\GoogleResponse.class
+com\duetche\service\Geometry.class
+com\duetche\model\Shop.class
+com\duetche\DeutcheApplication.class
+com\duetche\service\Result.class
