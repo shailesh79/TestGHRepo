@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Implementation-Vendor: Pivotal Software, Inc.
 Implementation-Title: deutche
-Implementation-Version: 0.0.1-SNAPSHOT
-Implementation-Vendor-Id: com.example
+Implementation-Version: 1.3.5.RELEASE
+Implementation-Vendor-Id: com.deutsche
 Build-Jdk: 1.7.0_25
 Built-By: paarth.m
 Created-By: Maven Integration for Eclipse

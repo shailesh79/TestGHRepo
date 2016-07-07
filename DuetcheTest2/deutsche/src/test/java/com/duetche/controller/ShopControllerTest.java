@@ -47,15 +47,6 @@ public class ShopControllerTest {
 	@InjectMocks
 	protected ShopController shopController;
 
-
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
 	@Before
 	public void setUp() throws Exception {
 		
@@ -63,9 +54,6 @@ public class ShopControllerTest {
 		this.mockMvc = MockMvcBuilders.standaloneSetup(shopController).build();
 	}
 
-	@After
-	public void tearDown() throws Exception {
-	}
 	
 	@Test
 	public void testGetNearestShop() throws Exception
@@ -109,7 +97,7 @@ public class ShopControllerTest {
 	public void testSaveShopDetails(Shop shop) throws Exception {
 
 	
-		//when(shopService.getNearestShop(anyString(),anyString())).thenReturn(shop);
+		
 		
 		mockMvc.perform(MockMvcRequestBuilders.post("/shop/addShop"))
 				

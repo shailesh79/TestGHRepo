@@ -1,17 +1,21 @@
 package com.duetche.service;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.List;
-import org.apache.commons.io.IOUtils;
+
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.springframework.stereotype.Component;
 
+import com.duetche.utils.ConverterConstants;
 
+@Component
 public class AddressConverter {
+	
+	final static Logger log = Logger.getLogger(AddressConverter.class);
  /*
   * Geocode request URL. Here see we are passing "json" it means we will get
   * the output in JSON format. You can also pass "xml" instead of "json" for
@@ -41,18 +45,10 @@ public class AddressConverter {
   URL url = new URL(URL + "?address="
     + URLEncoder.encode(fullAddress, "UTF-8") + "&sensor=false");
   // Open the Connection
-  
-  System.out.println("url = "+url);
   URLConnection conn = url.openConnection();
-  System.out.println("conn = "+conn.toString());
-
   InputStream in = conn.getInputStream() ;
-  
-  System.out.println("in = "+in.toString());
   ObjectMapper mapper = new ObjectMapper();
   GoogleResponse response = (GoogleResponse)mapper.readValue(in,GoogleResponse.class);
-  
-  System.out.println("response ="+response);
   in.close();
   return response;
   
@@ -84,49 +80,13 @@ public class AddressConverter {
   
 
  }
-
- 
- public void convert(String fullAddress) throws IOException {
-  
-  GoogleResponse res = new AddressConverter().convertToLatLong(fullAddress);
-  
-
-  if(res.getStatus().equals("OK"))
-  {
-   for(Result result : res.getResults())
-   {
-    System.out.println("Latitude of address is :"  +result.getGeometry().getLocation().getLat());
-    System.out.println("Longitude of address is :" + result.getGeometry().getLocation().getLng());
-    System.out.println("Location is " + result.getGeometry().getLocation_type());
-   }
-  }
-  else
-  {
-   System.out.println(res.getStatus());
-  }
-  
-  System.out.println("\n");
-  GoogleResponse res1 = new AddressConverter().convertFromLatLong("18.5635511,73.9325552");
-  if(res1.getStatus().equals("OK"))
-  {
-   for(Result result : res1.getResults())
-   {
-    System.out.println("address is :"  +result.getFormatted_address());
-   }
-  }
-  else
-  {
-   System.out.println(res1.getStatus());
-  }
- }
  
  public String findLatitude(String fullAddress) throws IOException {
 	  
 	  GoogleResponse res = new AddressConverter().convertToLatLong(fullAddress);
-	  System.out.println("res ="+res);
 	  String latitude = null;
 	
-	  if("OK".equals(res.getStatus()))
+	  if(ConverterConstants.OK.equals(res.getStatus()))
 	  {
 	   for(Result result : res.getResults())
 	   {
@@ -134,8 +94,11 @@ public class AddressConverter {
 	   }
 	  }
 	  else
-	  {
-		  System.out.println("res.getStatus() = "+res.getStatus());
+	  {		 
+		  if(log.isWarnEnabled())		
+		  {
+			  log.warn(" Not a good response while finding the Latitude");
+		  }
 	  }
 	 
 	  return latitude;
@@ -146,7 +109,7 @@ public class AddressConverter {
 	  GoogleResponse res = new AddressConverter().convertToLatLong(fullAddress);
 	  String longitude = null;
 	
-	  if("OK".equals(res.getStatus()))
+	  if(ConverterConstants.OK.equals(res.getStatus()))
 	  {
 	   for(Result result : res.getResults())
 	   {
@@ -154,8 +117,10 @@ public class AddressConverter {
 	   }
 	  }
 	  else
-	  {
-		  System.out.println(res.getStatus());
+	  {	 if(log.isWarnEnabled())		
+	  	{
+		  	log.warn(" Not a good response while finding the Longitude");
+	  	}
 	  }
 	 
 	  return longitude;

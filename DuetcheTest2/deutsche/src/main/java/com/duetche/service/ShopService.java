@@ -6,31 +6,33 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.springframework.context.annotation.ComponentScan;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.duetche.model.Shop;
-@ComponentScan
+@Component
 @Service
-public class ShopService {
+public class ShopService{
 	
-	AddressConverter converter = new AddressConverter();
+	final static Logger log = Logger.getLogger(ShopService.class);
+	
+	@Autowired
+	AddressConverter converter;
 	List<Shop> shopDetailsLst = new ArrayList<>();
 	
+	@Transactional
 	public void saveShopDetails(Shop shop) throws IOException
 	{
+		System.out.println("converter ="+converter);
 		String fullAddress = null;
 		fullAddress = shop.getShopName()+","+shop.getShopAddress()+","+shop.getPostCode();
-		
-		converter.convert(fullAddress);
-		
 		shop.setLatitude(converter.findLatitude(fullAddress));
-		System.out.println("Latitude = "+converter.findLatitude(fullAddress));
-		
 		shop.setLongitude(converter.findLongitude(fullAddress));
-		System.out.println("Longitude = "+converter.findLongitude(fullAddress));
-		
 		shopDetailsLst.add(shop);
+		log.info("Shop details added !!");
 	
 	}
 	
@@ -38,22 +40,20 @@ public class ShopService {
 	{
 		SortedMap<Double, Shop> sortedResultMap = new TreeMap<>();
 		
-		System.out.println("here...."+shopDetailsLst.size());
-		
 		for(Shop shop  : shopDetailsLst)
 		{
-			System.out.println("here....1");
-			System.out.println("Shop Name - "+shop.getShopName()+", Latitude - "+shop.getLatitude()+", Longitude - "+shop.getLongitude());
+			
 			sortedResultMap.put(distance(new Double(shop.getLatitude()), new Double(shop.getLongitude()), new Double(latitude), new Double(longitude)),shop);
-			
-			
 		}
+		
 		if(!sortedResultMap.isEmpty())
 		{
 			return sortedResultMap.get(sortedResultMap.firstKey());
 		}
 		
+		log.info("Nothing to return !!");
 		return null;
+		
 		
 	}
 	
